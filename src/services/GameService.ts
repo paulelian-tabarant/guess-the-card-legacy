@@ -39,9 +39,4 @@ export class GameService {
   public getDeck(): Card[] {
     return this.deck;
   }
-
-  // Méthode pour afficher la carte secrète (debug uniquement)
-  public getSecretCard(): Card | null {
-    return this.secretCard;
-  }
 }
