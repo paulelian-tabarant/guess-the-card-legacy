@@ -17,14 +17,14 @@ export class GameService {
     this.secretCard = this.deck[randomIndex];
   }
 
-  public makeGuess(guessedCard: Card): GameResult {
+  public makeGuess(guessedCardValue: number): GameResult {
     if (!this.secretCard) {
       throw new Error('Le jeu n\'a pas été initialisé');
     }
 
-    if (guessedCard.value === this.secretCard.value) {
+    if (guessedCardValue === this.secretCard.value) {
       return 'gagné !!';
-    } else if (guessedCard.value < this.secretCard.value) {
+    } else if (guessedCardValue < this.secretCard.value) {
       return 'plus';
     } else {
       return 'moins';
