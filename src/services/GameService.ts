@@ -1,5 +1,5 @@
-import type { Card } from '../models/Card';
-import { createDeck } from '../models/Card';
+import type { Card, Rank } from '../models/Card';
+import { createDeck, RANKS } from '../models/Card';
 
 export type GameResult = 'plus' | 'moins' | 'gagné !!';
 
@@ -14,12 +14,19 @@ export class GameService {
 
   private initializeGame(): void {
     const randomIndex = Math.floor(Math.random() * this.deck.length);
-    this.secretCard = this.deck[randomIndex];
+    const chosenCard = this.deck[randomIndex];
+
+    this.secretCard = chosenCard;
   }
 
-  public makeGuess(guessedCardValue: number): GameResult {
+  public makeGuess(guessedRank: Rank): GameResult {
     if (!this.secretCard) {
       throw new Error('Le jeu n\'a pas été initialisé');
+    }
+
+    const guessedCardValue = RANKS.find(r => r.rank === guessedRank)?.value;
+    if (guessedCardValue === undefined) {
+      throw new Error('Rang de carte invalide');
     }
 
     if (guessedCardValue === this.secretCard.value) {

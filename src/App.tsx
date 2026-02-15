@@ -18,7 +18,7 @@ function App() {
   const handleCardClick = (card: Card) => {
     if (gameWon) return;
 
-    const gameResult = gameService.makeGuess(card.value);
+    const gameResult = gameService.makeGuess(card.rank);
     setResult(gameResult);
     setAttempts(attempts + 1);
 
