@@ -5,26 +5,7 @@ interface CardButtonProps {
   onClick: (card: Card) => void;
 }
 
-// Fonction pour obtenir le symbole Unicode selon la couleur
-const getSuitSymbol = (suit: Card['suit']): string => {
-  const symbols = {
-    'Coeur': '♥',
-    'Carreau': '♦',
-    'Trèfle': '♣',
-    'Pique': '♠',
-  };
-  return symbols[suit];
-};
-
-// Fonction pour obtenir la couleur (rouge ou noir)
-const getSuitColor = (suit: Card['suit']): string => {
-  return suit === 'Coeur' || suit === 'Carreau' ? '#dc143c' : '#2c3e50';
-};
-
 export function CardButton({ card, onClick }: CardButtonProps) {
-  const suitColor = getSuitColor(card.suit);
-  const suitSymbol = getSuitSymbol(card.suit);
-
   return (
     <button
       onClick={() => onClick(card)}
@@ -43,7 +24,6 @@ export function CardButton({ card, onClick }: CardButtonProps) {
         justifyContent: 'space-between',
         fontSize: '16px',
         fontWeight: '500',
-        color: suitColor,
         transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.08)',
         position: 'relative',
@@ -63,20 +43,28 @@ export function CardButton({ card, onClick }: CardButtonProps) {
         fontSize: '15px',
         fontWeight: '500',
         alignSelf: 'flex-start',
+        color: '#191919',
       }}>
         {card.rank}
       </div>
       <div style={{
-        fontSize: '36px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '4px',
+        fontSize: '20px',
         lineHeight: '1',
       }}>
-        {suitSymbol}
+        <span style={{ color: '#dc143c' }}>♥</span>
+        <span style={{ color: '#dc143c' }}>♦</span>
+        <span style={{ color: '#2c3e50' }}>♣</span>
+        <span style={{ color: '#2c3e50' }}>♠</span>
       </div>
       <div style={{
         fontSize: '15px',
         fontWeight: '500',
         alignSelf: 'flex-end',
         transform: 'rotate(180deg)',
+        color: '#191919',
       }}>
         {card.rank}
       </div>

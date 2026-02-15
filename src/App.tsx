@@ -10,6 +10,7 @@ function App() {
   const [result, setResult] = useState<GameResult | null>(null);
   const [attempts, setAttempts] = useState<number>(0);
   const [gameWon, setGameWon] = useState<boolean>(false);
+  const [secretCard, setSecretCard] = useState<Card | null>(null);
 
   useEffect(() => {
     setDeck(gameService.getDeck());
@@ -24,6 +25,7 @@ function App() {
 
     if (gameResult === 'gagné !!') {
       setGameWon(true);
+      setSecretCard(gameService.getSecretCard());
     }
   };
 
@@ -32,12 +34,29 @@ function App() {
     setResult(null);
     setAttempts(0);
     setGameWon(false);
+    setSecretCard(null);
   };
 
   // Prendre seulement la première carte de chaque rang (une seule carte par valeur)
   const uniqueCards = RANKS.map(({ rank }) => {
     return deck.find((card) => card.rank === rank)!;
   }).filter(Boolean);
+
+  // Fonction pour obtenir le symbole Unicode selon la couleur
+  const getSuitSymbol = (suit: Card['suit']): string => {
+    const symbols = {
+      'Coeur': '♥',
+      'Carreau': '♦',
+      'Trèfle': '♣',
+      'Pique': '♠',
+    };
+    return symbols[suit];
+  };
+
+  // Fonction pour obtenir la couleur (rouge ou noir)
+  const getSuitColor = (suit: Card['suit']): string => {
+    return suit === 'Coeur' || suit === 'Carreau' ? '#dc143c' : '#2c3e50';
+  };
 
   // Fonction pour obtenir le style selon le résultat
   const getResultDisplay = (result: GameResult) => {
@@ -116,30 +135,82 @@ function App() {
             </div>
           )}
 
-          {gameWon && (
-            <button
-              onClick={handleReset}
-              style={{
-                marginTop: '24px',
-                padding: '12px 24px',
-                fontSize: '15px',
-                backgroundColor: '#191919',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontWeight: '500',
-                transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#333';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#191919';
-              }}
-            >
-              Nouvelle partie
-            </button>
+          {gameWon && secretCard && (
+            <div style={{
+              marginTop: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px',
+            }}>
+              <div style={{
+                fontSize: '16px',
+                color: '#666',
+                fontWeight: '400',
+              }}>
+                La carte mystère était :
+              </div>
+              <div style={{
+                width: '100px',
+                height: '140px',
+                padding: '12px',
+                border: '2px solid #191919',
+                borderRadius: '12px',
+                backgroundColor: '#ffffff',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              }}>
+                <div style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  alignSelf: 'flex-start',
+                  color: getSuitColor(secretCard.suit),
+                }}>
+                  {secretCard.rank}
+                </div>
+                <div style={{
+                  fontSize: '48px',
+                  lineHeight: '1',
+                  color: getSuitColor(secretCard.suit),
+                }}>
+                  {getSuitSymbol(secretCard.suit)}
+                </div>
+                <div style={{
+                  fontSize: '18px',
+                  fontWeight: '600',
+                  alignSelf: 'flex-end',
+                  transform: 'rotate(180deg)',
+                  color: getSuitColor(secretCard.suit),
+                }}>
+                  {secretCard.rank}
+                </div>
+              </div>
+              <button
+                onClick={handleReset}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '15px',
+                  backgroundColor: '#191919',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: '500',
+                  transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#333';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#191919';
+                }}
+              >
+                Nouvelle partie
+              </button>
+            </div>
           )}
         </div>
 

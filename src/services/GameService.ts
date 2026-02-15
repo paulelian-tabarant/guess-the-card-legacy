@@ -46,4 +46,8 @@ export class GameService {
   public getDeck(): Card[] {
     return this.deck;
   }
+
+  public getSecretCard(): Card | null {
+    return this.secretCard;
+  }
 }
