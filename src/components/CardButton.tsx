@@ -1,14 +1,14 @@
-import type { Card } from '../models/Card';
+import type { Rank } from '../models/Card';
 
 interface CardButtonProps {
-  card: Card;
-  onClick: (card: Card) => void;
+  rank: Rank;
+  onClick: (rank: Rank) => void;
 }
 
-export function CardButton({ card, onClick }: CardButtonProps) {
+export function CardButton({ rank, onClick }: CardButtonProps) {
   return (
     <button
-      onClick={() => onClick(card)}
+      onClick={() => onClick(rank)}
       style={{
         width: '85px',
         height: '120px',
@@ -45,7 +45,7 @@ export function CardButton({ card, onClick }: CardButtonProps) {
         alignSelf: 'flex-start',
         color: '#191919',
       }}>
-        {card.rank}
+        {rank}
       </div>
       <div style={{
         display: 'grid',
@@ -66,7 +66,7 @@ export function CardButton({ card, onClick }: CardButtonProps) {
         transform: 'rotate(180deg)',
         color: '#191919',
       }}>
-        {card.rank}
+        {rank}
       </div>
     </button>
   );

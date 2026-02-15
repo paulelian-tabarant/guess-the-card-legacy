@@ -1,31 +1,27 @@
-import { useState, useEffect } from 'react';
-import type { Card } from './models/Card';
+import { useState } from 'react';
+import type { DisplayCard, Rank } from './models/Card';
 import { GameService, type GameResult } from './services/GameService';
 import { CardButton } from './components/CardButton';
-import { RANKS } from './models/Card';
 
 function App() {
   const [gameService] = useState(() => new GameService());
-  const [deck, setDeck] = useState<Card[]>([]);
   const [result, setResult] = useState<GameResult | null>(null);
   const [attempts, setAttempts] = useState<number>(0);
   const [gameWon, setGameWon] = useState<boolean>(false);
-  const [secretCard, setSecretCard] = useState<Card | null>(null);
+  const [secretCard, setSecretCard] = useState<DisplayCard | null>(null);
 
-  useEffect(() => {
-    setDeck(gameService.getDeck());
-  }, [gameService]);
+  const ranks = gameService.getAllRanks();
 
-  const handleCardClick = (card: Card) => {
+  const handleCardClick = (rank: Rank) => {
     if (gameWon) return;
 
-    const gameResult = gameService.makeGuess(card.rank);
+    const gameResult = gameService.makeGuess(rank);
     setResult(gameResult);
     setAttempts(attempts + 1);
 
     if (gameResult === 'gagné !!') {
       setGameWon(true);
-      setSecretCard(gameService.getSecretCard());
+      setSecretCard(gameService.revealSecretCard());
     }
   };
 
@@ -37,13 +33,8 @@ function App() {
     setSecretCard(null);
   };
 
-  // Prendre seulement la première carte de chaque rang (une seule carte par valeur)
-  const uniqueCards = RANKS.map(({ rank }) => {
-    return deck.find((card) => card.rank === rank)!;
-  }).filter(Boolean);
-
   // Fonction pour obtenir le symbole Unicode selon la couleur
-  const getSuitSymbol = (suit: Card['suit']): string => {
+  const getSuitSymbol = (suit: DisplayCard['suit']): string => {
     const symbols = {
       'Coeur': '♥',
       'Carreau': '♦',
@@ -54,7 +45,7 @@ function App() {
   };
 
   // Fonction pour obtenir la couleur (rouge ou noir)
-  const getSuitColor = (suit: Card['suit']): string => {
+  const getSuitColor = (suit: DisplayCard['suit']): string => {
     return suit === 'Coeur' || suit === 'Carreau' ? '#dc143c' : '#2c3e50';
   };
 
@@ -220,10 +211,10 @@ function App() {
           gap: '8px',
           flexWrap: 'wrap',
         }}>
-          {uniqueCards.map((card) => (
+          {ranks.map((rank) => (
             <CardButton
-              key={`${card.suit}-${card.rank}`}
-              card={card}
+              key={rank}
+              rank={rank}
               onClick={handleCardClick}
             />
           ))}

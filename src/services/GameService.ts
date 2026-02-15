@@ -1,4 +1,4 @@
-import type {Card, Rank} from '../models/Card';
+import type {Card, Rank, DisplayCard} from '../models/Card';
 import {createDeck, RANKS} from '../models/Card';
 
 export type GameResult = 'plus' | 'moins' | 'gagné !!';
@@ -15,6 +15,7 @@ export class GameService {
 
     this.secretCard = chosenCard;
   }
+
   public makeGuess(guessedRank: Rank): GameResult {
     if (!this.secretCard) {
       throw new Error('Le jeu n\'a pas été initialisé');
@@ -41,11 +42,17 @@ export class GameService {
     this.secretCard = chosenCard;
   }
 
-  public getDeck(): Card[] {
-    return this.deck;
+  public getAllRanks(): Rank[] {
+    return RANKS.map(r => r.rank);
   }
 
-  public getSecretCard(): Card | null {
-    return this.secretCard;
+  public revealSecretCard(): DisplayCard | null {
+    if (!this.secretCard) {
+      return null;
+    }
+    return {
+      suit: this.secretCard.suit,
+      rank: this.secretCard.rank
+    };
   }
 }
