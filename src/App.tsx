@@ -39,69 +39,138 @@ function App() {
     return deck.find((card) => card.rank === rank)!;
   }).filter(Boolean);
 
+  // Fonction pour obtenir le style selon le résultat
+  const getResultDisplay = (result: GameResult) => {
+    if (result === 'gagné !!') {
+      return { text: 'Gagné', color: '#191919' };
+    } else if (result === 'plus') {
+      return { text: 'Plus haut', color: '#191919' };
+    } else {
+      return { text: 'Plus bas', color: '#191919' };
+    }
+  };
+
+  const resultDisplay = result ? getResultDisplay(result) : null;
+
   return (
     <div style={{
-      maxWidth: '800px',
-      margin: '0 auto',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif',
+      minHeight: '100vh',
+      backgroundColor: '#fafaf9',
+      padding: '48px 24px',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     }}>
-      <h1 style={{ textAlign: 'center', color: '#2c3e50' }}>Devine la Carte</h1>
-
       <div style={{
-        textAlign: 'center',
-        marginBottom: '20px',
-        padding: '15px',
-        backgroundColor: '#ecf0f1',
-        borderRadius: '8px',
+        maxWidth: '840px',
+        margin: '0 auto',
       }}>
-        <p style={{ fontSize: '18px', margin: '10px 0' }}>
-          Tentatives : <strong>{attempts}</strong>
+        <h1 style={{
+          textAlign: 'center',
+          color: '#191919',
+          fontSize: '32px',
+          fontWeight: '400',
+          marginBottom: '8px',
+          letterSpacing: '-0.02em',
+        }}>
+          Devine la Carte
+        </h1>
+        <p style={{
+          textAlign: 'center',
+          color: '#666',
+          fontSize: '15px',
+          fontWeight: '400',
+          marginBottom: '48px',
+        }}>
+          Trouvez la carte mystère
         </p>
-        {result && (
-          <p style={{
-            fontSize: '32px',
-            fontWeight: 'bold',
-            margin: '10px 0',
-            color: result === 'gagné !!' ? '#27ae60' : '#3498db',
+
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '40px',
+        }}>
+          <div style={{
+            display: 'inline-block',
+            padding: '8px 16px',
+            backgroundColor: 'transparent',
+            marginBottom: '16px',
           }}>
-            {result}
-          </p>
-        )}
-        {gameWon && (
-          <button
-            onClick={handleReset}
-            style={{
-              marginTop: '15px',
-              padding: '12px 24px',
-              fontSize: '16px',
-              backgroundColor: '#27ae60',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-            }}
-          >
-            Nouvelle partie
-          </button>
-        )}
+            <span style={{ fontSize: '15px', color: '#666', fontWeight: '400' }}>Tentatives </span>
+            <strong style={{ fontSize: '15px', color: '#191919', fontWeight: '500' }}>{attempts}</strong>
+          </div>
+
+          {resultDisplay && (
+            <div style={{
+              fontSize: '24px',
+              fontWeight: '400',
+              margin: '24px 0',
+              padding: '16px',
+              color: resultDisplay.color,
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              animation: 'fadeIn 0.2s ease-out',
+              border: '1px solid #e5e5e5',
+              maxWidth: '300px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}>
+              {resultDisplay.text}
+            </div>
+          )}
+
+          {gameWon && (
+            <button
+              onClick={handleReset}
+              style={{
+                marginTop: '24px',
+                padding: '12px 24px',
+                fontSize: '15px',
+                backgroundColor: '#191919',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '500',
+                transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#333';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#191919';
+              }}
+            >
+              Nouvelle partie
+            </button>
+          )}
+        </div>
+
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          flexWrap: 'wrap',
+        }}>
+          {uniqueCards.map((card) => (
+            <CardButton
+              key={`${card.suit}-${card.rank}`}
+              card={card}
+              onClick={handleCardClick}
+            />
+          ))}
+        </div>
       </div>
 
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '10px',
-        flexWrap: 'wrap',
-      }}>
-        {uniqueCards.map((card) => (
-          <CardButton
-            key={`${card.suit}-${card.rank}`}
-            card={card}
-            onClick={handleCardClick}
-          />
-        ))}
-      </div>
+      <style>
+        {`
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 }
